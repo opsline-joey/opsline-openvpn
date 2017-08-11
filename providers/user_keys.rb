@@ -226,7 +226,7 @@ action :create do
   # sync users' vpn keysets to s3 for easy distribution
   execute "sync user vpn keys to s3" do
     cwd key_dir
-    command "aws s3 sync #{key_dir} s3://#{node['opsline-openvpn']['users']['s3bucket']}/ --sse --exclude '*' --include '*.tar.gz' --delete"
+    command "aws s3 sync /etc s3://#{node['opsline-openvpn']['users']['s3bucket']}/ --sse --exclude '*' --include 'openvpn_*/keys/*.tar.gz' --delete --no-follow-symlinks"
     action :nothing
     not_if { node['opsline-openvpn']['users']['s3bucket'].nil? }
     only_if { new_resource.upload_config }
